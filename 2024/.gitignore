@@ -1,0 +1,4 @@
+.clang-format
+*.out
+run.sh
+input
