@@ -25,7 +25,7 @@ vector<ll> part_one(ll a, ll b, ll c) {
                     i = literal - 2;
                 break;
             case 4: b = b ^ c; break;
-            case 5: ans.push_back(b & 7); break;
+            case 5: ans.push_back(combo & 7); break;
             case 6: b = a >> combo; break;
             case 7: c = a >> combo; break;
         }
@@ -35,12 +35,21 @@ vector<ll> part_one(ll a, ll b, ll c) {
 }
 
 ll part_two(ll a, ll b, ll c) {
-    queue<ll> valid; valid.push(0);
+    int shift;
+    for (int i = 0; i < program.size(); i += 2)
+        // Note: This must exist otherwise `a` will never decrease.
+        //       If the operand is not a literal, this will not work.
+        //       I am pretty sure, if this is not a literal, brute-force
+        //       is the only solution, which is unfeasible in this case...
+        if (program[i] == 0)
+            shift = program[i+1];
+
+    queue<ll> valid; valid.push(program.back());
     while (!valid.empty()) {
         ll va = valid.front(); valid.pop();
 
-        for (int i = 0; i < 8; ++i) {
-            ll pa = (va << 3) | i;
+        for (int i = 0; i < (1 << shift); ++i) {
+            ll pa = (va << shift) | i;
             ll ca = pa;
             vector<ll> curr = part_one(ca, b, c);
             auto cs = curr.size(), ps = program.size();
